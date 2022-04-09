@@ -114,6 +114,8 @@ class Form extends React.Component {
         this.setState({isOpened: true}, () => {
             if (!this.state.isCorrectPesel) this.setState({peselError: true})
             if (this.state.birthdate != this.state.checkDate) this.setState({peselError: true, isCorrectPesel: false})
+            else if (this.state.birthdate == this.state.checkDate) this.setState({peselError: false, isCorrectPesel: true})
+            console.log(this.state.birthdate)
             console.log("sprawdz date " + this.state.checkDate)
         })
     }
