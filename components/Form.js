@@ -140,10 +140,10 @@ class Form extends React.Component {
                 <Modal open={this.state.isOpened} onClose={() => this.setState({isOpened: false})} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
                 <Box sx={style}>
                     <Typography align="center" id="modal-modal-title" variant="h6" component="h2">
-                    {this.state.isCorrectPesel ? messagesWhenValid[0] : messagesWhenNotValid[0]}
+                    {this.state.isCorrectPesel && this.state.firstname != "" && this.state.lastname != "" ? messagesWhenValid[0] : messagesWhenNotValid[0]}
                     </Typography>
                     <Typography align="center" id="modal-modal-description" sx={{ mt: 2 }}>
-                    {this.state.isCorrectPesel ? messagesWhenValid[1] : messagesWhenNotValid[1]}
+                    {this.state.isCorrectPesel && this.state.firstname != "" && this.state.lastname != "" ? messagesWhenValid[1] : messagesWhenNotValid[1]}
                     </Typography>
                 </Box>
                 </Modal>
