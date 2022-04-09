@@ -124,7 +124,7 @@ class Form extends React.Component {
             <div>
                 <Container component="main">
                     <Box sx={{marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                    <Avatar src="../lock.png" sx={{width: 56, height: 56, marginBottom: "1.5vh"}} title="Icon created by Ilham Fitrotul Hayat (https://www.flaticon.com/premium-icon/lock_2763100)"></Avatar>
+                    <Avatar src="../lock2.png" sx={{width: 56, height: 56, marginBottom: "1.5vh"}} title="Icon created by rizky adhitya pradana (https://www.flaticon.com/free-icon/lock_6388589)"></Avatar>
                         <FormControl sx={{ width: '40ch' }}>
                             <Typography align="center" component="h1" variant="h5">
                                 Formularz
