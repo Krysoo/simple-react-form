@@ -39,6 +39,7 @@ class Form extends React.Component {
             lastname: '',
             pesel: '',
             birthdate: '',
+            checkDate: "",
             isOpened: false,
             peselError: false
         }
@@ -64,7 +65,9 @@ class Form extends React.Component {
         if ((month >= 21 && month <= 32 && year <= 22) || (month >= 1 && month <= 12 && year >= 23)) tests++
         let day = pesel.substring(4, 6)
         if (day <= 31) tests++
-        return tests == 4 ? true : false
+        if (tests != 4) return false
+        this.setState({checkDate: pesel})
+        return true
     }
 
     convertPeselToDate(value) {
@@ -84,14 +87,15 @@ class Form extends React.Component {
         let day = pesel.substring(4, 6)
         if (day > 31) return false
         let date =  year + "-" + month + "-" + day
-        console.log(this.state.pesel)
-        this.setState({birthdate: date, isCorrectPesel: this.isValidPesel() ? true : false})
-        console.log(this.state.pesel)
+        this.setState({birthdate: date, isCorrectPesel: this.isValidPesel() ? true : false}, () => {
+            this.setState({checkDate: date})
+        })
     }
 
     handleNameChange(event) {
         let name = event.target.name
         let value = event.target.value
+        if (value[value.length - 1] == 0) return false //parseInt ignores zero
         if (!parseInt(value)) this.setState({[name]: value})
         else return false
     }
@@ -109,6 +113,8 @@ class Form extends React.Component {
     handleSubmit() {
         this.setState({isOpened: true}, () => {
             if (!this.state.isCorrectPesel) this.setState({peselError: true})
+            if (this.state.birthdate != this.state.checkDate) this.setState({peselError: true, isCorrectPesel: false})
+            console.log("sprawdz date " + this.state.checkDate)
         })
     }
     render() {
