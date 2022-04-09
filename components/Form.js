@@ -1,8 +1,3 @@
-// todo:
-// poukladac componenty
-// dac textfield error
-// naprawic bugi
-
 const {
     TextField,
     Grid,
@@ -15,6 +10,7 @@ const {
     Container,
     Box,
     Modal,
+    Avatar,
   } = MaterialUI;
 
 const style = {
@@ -39,33 +35,36 @@ class Form extends React.Component {
             isCorrectName: false,
             isCorrectPesel: false,
             isEverythingValid: false,
+            firstname: '',
+            lastname: '',
             pesel: '',
             birthdate: '',
-            isOpened: false
+            isOpened: false,
+            peselError: false
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.handleNameChange = this.handleNameChange.bind(this)
     }
 
-    validateName(event) {
-        const name = event.target.name;
-
-        if (name.contains("name")) {
-            if (typeof name == "string") {
-                this.setState({isCorrectName: true})
-            }
+    isValidName(event) {
+        const value = event.target.value;
+        if (typeof value == "string") {
+            this.setState({isCorrectName: true})
         }
     }
 
     isValidPesel() {
         const pesel = this.state.pesel
         let year = pesel.substring(0, 2)
-        if (!year <= 22 || !year >= 22) return false
+        let tests = 0;
+        if (pesel.length == 11) tests ++;
+        if (year <= 22 || year >= 22) tests++
         let month = pesel.substring(2, 4)
-        if (!(month >= 21 && month <= 32 && year <= 22) || !(month >= 1 && month <= 12 && year >= 23)) return false
+        if ((month >= 21 && month <= 32 && year <= 22) || (month >= 1 && month <= 12 && year >= 23)) tests++
         let day = pesel.substring(4, 6)
-        if (!day <= 31) return false
-        return true
+        if (day <= 31) tests++
+        return tests == 4 ? true : false
     }
 
     convertPeselToDate(value) {
@@ -85,26 +84,31 @@ class Form extends React.Component {
         let day = pesel.substring(4, 6)
         if (day > 31) return false
         let date =  year + "-" + month + "-" + day
-        console.log(this.state)
-        this.setState({birthdate: date, isCorrectPesel: pesel.length == 11 ? true : false})
-        console.log(pesel.split(''))
-        console.log(this.state.birthdate.split(""))
+        console.log(this.state.pesel)
+        this.setState({birthdate: date, isCorrectPesel: this.isValidPesel() ? true : false})
+        console.log(this.state.pesel)
+    }
+
+    handleNameChange(event) {
+        let name = event.target.name
+        let value = event.target.value
+        if (!parseInt(value)) this.setState({[name]: value})
+        else return false
     }
 
     handleChange(event) {
         let value = event.target.value
-        console.log(value)
         if (value[value.length - 1] == " ") return this.setState({isCorrectPesel: false})
         else if (isNaN(value)) return this.setState({isCorrectPesel: false})
-        this.setState({ pesel: value, birthdate: value }, () => {
+        else if (new Date(value[0] + value[1])) this.setState({isCorrectPesel: false})
+        this.setState({ pesel: value, birthdate: value, peselError: false }, () => {
             this.convertPeselToDate(value)
         })
     }
 
     handleSubmit() {
-        console.log(this.isValidPesel)
         this.setState({isOpened: true}, () => {
-            if (this.state.isValidPesel) this.setState({isEverythingValid: true})
+            if (!this.state.isCorrectPesel) this.setState({peselError: true})
         })
     }
     render() {
@@ -112,13 +116,14 @@ class Form extends React.Component {
             <div>
                 <Container component="main">
                     <Box sx={{marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                    <Avatar src="../lock.png" sx={{width: 56, height: 56, marginBottom: "1.5vh"}}></Avatar>
                         <FormControl sx={{ width: '40ch' }}>
                             <Typography align="center" component="h1" variant="h5">
                                 Formularz
                             </Typography>
-                            <TextField inputProps={{ maxLength: 20}} fullWidth margin="normal" label={"Imię"} id="imie"></TextField>
-                            <TextField inputProps={{ maxLength: 30}} margin="normal" label={"Nazwisko"} id="nazwisko"></TextField>
-                            <TextField inputProps={{ maxLength: 11 }} type="text" value={this.state.pesel} onChange={this.handleChange} margin="normal" label={"PESEL"} id="pasel"></TextField>
+                            <TextField inputProps={{ maxLength: 20}} value={this.state.firstname} margin="normal" label={"Imię"} name="firstname" onChange={this.handleNameChange}></TextField>
+                            <TextField inputProps={{ maxLength: 30}} value={this.state.lastname} margin="normal" label={"Nazwisko"} name="lastname" onChange={this.handleNameChange} ></TextField>
+                            <TextField error={this.state.peselError} inputProps={{ maxLength: 11 }} type="text" value={this.state.pesel} onChange={this.handleChange} margin="normal" label={"PESEL"} id="pasel"></TextField>
                             <TextField inputProps={{ min: "1900,04,09", max: "2050-04-09"}} margin="normal" type="date" onChange={(event) => {this.setState({birthdate: event.target.value})}} value={this.state.birthdate} id="data"></TextField>
                             <Button onClick={this.handleSubmit} style={{marginTop: "1.5vh"}} variant="contained">Wyślij</Button>
                         </FormControl>
