@@ -135,8 +135,10 @@ class Form extends React.Component {
             if (this.state.firstname == "") this.setState({firstnameError: true})
             if (this.state.lastname == "") this.setState({lastnameError: true})
             if (this.state.birthdate != this.state.checkDate) this.setState({peselError: true, isCorrectPesel: false})
+            else if (this.state.birthdate == this.state.checkDate) this.setState({peselError: false, isCorrectPesel: true})
             else if (this.state.birthdate == this.state.checkDate && this.state.isCorrectPesel) this.setState({peselError: false, isCorrectPesel: true})
             console.log(this.state.birthdate)
+            console.log(this.state)
             console.log("sprawdz date " + this.state.checkDate)
         })
     }
