@@ -63,7 +63,7 @@ class Form extends React.Component {
         if (pesel.length == 11) tests ++;
         if (year <= 22 || year >= 22) tests++
         let month = pesel.substring(2, 4)
-        if ((month >= 21 && month <= 32 && year <= 22) || (month >= 1 && month <= 12 && year >= 23)) tests++
+        if ((month >= 21 && month <= 32) || (month >= 1 && month <= 12)) tests++
         let day = pesel.substring(4, 6)
         if (day <= 31) tests++
         if (this.calcPeselChecksum()) tests++
@@ -86,6 +86,7 @@ class Form extends React.Component {
         sum = sum - 10
         if (sum >= 10) sum = sum.toString().charAt(1)
         sum = 10 - sum
+        console.log("suma po odejmowaniu " + sum)
         if (pesel.toString().charAt(10) == sum) return true
         else return false
     }
@@ -93,16 +94,20 @@ class Form extends React.Component {
     convertPeselToDate(value) {
         let pesel = this.state.pesel == "" ? value : this.state.pesel
         let year = pesel.substring(0, 2)
-        if (year <= 22) {
-            year = '20' + year
-        } else {
-            year = '19' + year
-        }
+        // if (month <= 22) {
+        //     year = '20' + year
+        // } else {
+        //     year = '19' + year
+        // }
         let month = pesel.substring(2, 4)
         if (month >= 21 && month <= 32) {
+            year = '20' + year
             month = '0' + month[1]
         }
-        else if (month >= 1 && month <= 12) month = month
+        else if (month >= 1 && month <= 12){
+            year = '19' + year
+            month = month
+        } 
         else return false;
         let day = pesel.substring(4, 6)
         if (day > 31) return false
