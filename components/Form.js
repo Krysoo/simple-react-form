@@ -34,14 +34,15 @@ class Form extends React.Component {
         this.state = {
             isCorrectName: false,
             isCorrectPesel: false,
-            isEverythingValid: false,
             firstname: '',
             lastname: '',
             pesel: '',
             birthdate: '',
             checkDate: "",
             isOpened: false,
-            peselError: false
+            peselError: false,
+            firstnameError: false,
+            lastnameError: false,
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -65,9 +66,28 @@ class Form extends React.Component {
         if ((month >= 21 && month <= 32 && year <= 22) || (month >= 1 && month <= 12 && year >= 23)) tests++
         let day = pesel.substring(4, 6)
         if (day <= 31) tests++
-        if (tests != 4) return false
+        if (this.calcPeselChecksum()) tests++
+        if (tests != 5) return false
         this.setState({checkDate: pesel})
         return true
+    }
+
+    calcPeselChecksum() {
+        const wages = [1, 3, 7, 9, 1, 3, 7, 9, 1, 3]
+        let pesel = this.state.pesel
+        let sum = 0
+        let multiply = 0
+        for (let i = 0; i < pesel.length - 1; i++) {
+            multiply = pesel[i] * wages[i]
+            if (multiply >= 10) multiply = multiply.toString().charAt(1)
+            sum += parseInt(multiply)
+        }
+        console.log("suma po mnozeniu " + sum)
+        sum = sum - 10
+        if (sum >= 10) sum = sum.toString().charAt(1)
+        sum = 10 - sum
+        if (pesel.toString().charAt(10) == sum) return true
+        else return false
     }
 
     convertPeselToDate(value) {
@@ -95,8 +115,9 @@ class Form extends React.Component {
     handleNameChange(event) {
         let name = event.target.name
         let value = event.target.value
+        console.log([name+"Error"])
         if (value[value.length - 1] == 0) return false //parseInt ignores zero
-        if (!parseInt(value)) this.setState({[name]: value})
+        if (!parseInt(value)) this.setState({[name]: value, [name+"Error"]: false})
         else return false
     }
 
@@ -105,6 +126,7 @@ class Form extends React.Component {
         if (value[value.length - 1] == " ") return this.setState({isCorrectPesel: false})
         else if (isNaN(value)) return this.setState({isCorrectPesel: false})
         else if (new Date(value[0] + value[1])) this.setState({isCorrectPesel: false})
+
         this.setState({ pesel: value, birthdate: value, peselError: false }, () => {
             this.convertPeselToDate(value)
         })
@@ -113,6 +135,8 @@ class Form extends React.Component {
     handleSubmit() {
         this.setState({isOpened: true}, () => {
             if (!this.state.isCorrectPesel) this.setState({peselError: true})
+            if (this.state.firstname == "") this.setState({firstnameError: true})
+            if (this.state.lastname == "") this.setState({lastnameError: true})
             if (this.state.birthdate != this.state.checkDate) this.setState({peselError: true, isCorrectPesel: false})
             else if (this.state.birthdate == this.state.checkDate && this.state.isCorrectPesel) this.setState({peselError: false, isCorrectPesel: true})
             console.log(this.state.birthdate)
@@ -129,8 +153,8 @@ class Form extends React.Component {
                             <Typography align="center" component="h1" variant="h5">
                                 Formularz
                             </Typography>
-                            <TextField inputProps={{ maxLength: 20}} value={this.state.firstname} margin="normal" label={"Imię"} name="firstname" onChange={this.handleNameChange}></TextField>
-                            <TextField inputProps={{ maxLength: 30}} value={this.state.lastname} margin="normal" label={"Nazwisko"} name="lastname" onChange={this.handleNameChange} ></TextField>
+                            <TextField error={this.state.firstnameError} inputProps={{ maxLength: 20}} value={this.state.firstname} margin="normal" label={"Imię"} name="firstname" onChange={this.handleNameChange}></TextField>
+                            <TextField error={this.state.lastnameError} inputProps={{ maxLength: 30}} value={this.state.lastname} margin="normal" label={"Nazwisko"} name="lastname" onChange={this.handleNameChange} ></TextField>
                             <TextField error={this.state.peselError} inputProps={{ maxLength: 11 }} type="text" value={this.state.pesel} onChange={this.handleChange} margin="normal" label={"PESEL"} id="pasel"></TextField>
                             <TextField inputProps={{ min: "1900,04,09", max: "2050-04-09"}} margin="normal" type="date" onChange={(event) => {this.setState({birthdate: event.target.value})}} value={this.state.birthdate} id="data"></TextField>
                             <Button onClick={this.handleSubmit} style={{marginTop: "1.5vh"}} variant="contained">Wyślij</Button>
