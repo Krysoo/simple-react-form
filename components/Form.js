@@ -82,11 +82,8 @@ class Form extends React.Component {
             if (multiply >= 10) multiply = multiply.toString().charAt(1)
             sum += parseInt(multiply)
         }
-        console.log("suma po mnozeniu " + sum)
-        sum = sum - 10
         if (sum >= 10) sum = sum.toString().charAt(1)
         sum = 10 - sum
-        console.log("suma po odejmowaniu " + sum)
         if (pesel.toString().charAt(10) == sum) return true
         else return false
     }
@@ -94,11 +91,6 @@ class Form extends React.Component {
     convertPeselToDate(value) {
         let pesel = this.state.pesel == "" ? value : this.state.pesel
         let year = pesel.substring(0, 2)
-        // if (month <= 22) {
-        //     year = '20' + year
-        // } else {
-        //     year = '19' + year
-        // }
         let month = pesel.substring(2, 4)
         if (month >= 21 && month <= 32) {
             year = '20' + year
