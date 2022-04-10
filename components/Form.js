@@ -114,7 +114,7 @@ class Form extends React.Component {
         let value = event.target.value
         console.log([name+"Error"])
         if (value[value.length - 1] == 0) return false //parseInt ignores zero
-        if (!parseInt(value)) this.setState({[name]: value, [name+"Error"]: false})
+        if (!parseInt(value[value.length - 1])) this.setState({[name]: value, [name+"Error"]: false})
         else return false
     }
 
