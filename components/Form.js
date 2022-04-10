@@ -127,6 +127,7 @@ class Form extends React.Component {
         this.setState({ pesel: value, birthdate: value, peselError: false }, () => {
             this.convertPeselToDate(value)
         })
+        
     }
 
     handleSubmit() {
@@ -136,9 +137,6 @@ class Form extends React.Component {
             if (this.state.lastname == "") this.setState({lastnameError: true})
             if (this.state.birthdate != this.state.checkDate) this.setState({peselError: true, isCorrectPesel: false})
             else if (this.state.birthdate == this.state.checkDate && this.isValidPesel(true)) this.setState({peselError: false, isCorrectPesel: true})
-            console.log(this.state.birthdate)
-            console.log(this.state)
-            console.log("sprawdz date " + this.state.checkDate)
         })
     }
     render() {
