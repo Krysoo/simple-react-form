@@ -56,7 +56,7 @@ class Form extends React.Component {
         }
     }
 
-    isValidPesel() {
+    isValidPesel(bool) {
         const pesel = this.state.pesel
         let year = pesel.substring(0, 2)
         let tests = 0;
@@ -68,7 +68,7 @@ class Form extends React.Component {
         if (day <= 31) tests++
         if (this.calcPeselChecksum()) tests++
         if (tests != 5) return false
-        this.setState({checkDate: pesel})
+        if (!bool) this.setState({checkDate: pesel})
         return true
     }
 
@@ -135,8 +135,7 @@ class Form extends React.Component {
             if (this.state.firstname == "") this.setState({firstnameError: true})
             if (this.state.lastname == "") this.setState({lastnameError: true})
             if (this.state.birthdate != this.state.checkDate) this.setState({peselError: true, isCorrectPesel: false})
-            else if (this.state.birthdate == this.state.checkDate) this.setState({peselError: false, isCorrectPesel: true})
-            else if (this.state.birthdate == this.state.checkDate && this.state.isCorrectPesel) this.setState({peselError: false, isCorrectPesel: true})
+            else if (this.state.birthdate == this.state.checkDate && this.isValidPesel(true)) this.setState({peselError: false, isCorrectPesel: true})
             console.log(this.state.birthdate)
             console.log(this.state)
             console.log("sprawdz date " + this.state.checkDate)
