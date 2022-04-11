@@ -56,6 +56,13 @@ class Form extends React.Component {
         }
     }
 
+    containNumber(value) {
+        for (let i = 0; i<value.length; i++) {
+            if (!isNaN(value[i])) return true
+        }
+        return false
+    }
+
     isValidPesel(bool) {
         const pesel = this.state.pesel
         let year = pesel.substring(0, 2)
@@ -112,9 +119,7 @@ class Form extends React.Component {
     handleNameChange(event) {
         let name = event.target.name
         let value = event.target.value
-        console.log([name+"Error"])
-        if (value[value.length - 1] == 0) return false //parseInt ignores zero
-        if (!parseInt(value[value.length - 1])) this.setState({[name]: value, [name+"Error"]: false})
+        if (!this.containNumber(value)) this.setState({[name]: value, [name+"Error"]: false})
         else return false
     }
 
