@@ -120,7 +120,7 @@ class Form extends React.Component {
 
     handleChange(event) {
         let value = event.target.value
-        if (value[value.length - 1] == " ") return this.setState({isCorrectPesel: false})
+        if (value.includes(" ")) return this.setState({isCorrectPesel: false})
         else if (isNaN(value)) return this.setState({isCorrectPesel: false})
         else if (new Date(value[0] + value[1])) this.setState({isCorrectPesel: false})
 
